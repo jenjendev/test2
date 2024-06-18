@@ -1,122 +1,155 @@
-# Owl Carousel 2
+# WOW.js [![Build Status](https://secure.travis-ci.org/graingert/WOW.svg?branch=master)](http://travis-ci.org/graingert/WOW)
 
-Touch enabled [jQuery](https://jquery.com/) plugin that lets you create a beautiful, responsive carousel slider. **To get started, check out https://owlcarousel2.github.io/OwlCarousel2/.**
+Temporary deprecation:
+======================
 
-**Notice:** The old Owl Carousel site (owlgraphic [dot] com) is no longer in use. Please delete all references to this in bookmarks and your own products' documentation as it's being used for malicious purposes.
+wow.js is temporarily deprecated in favour of AOS (Animate on Scroll). Feel free to ignore the warning if you can't use AOS.
 
-## Quick start
+Plans for 3.0 include:
 
-### Install
-
-This package can be installed with:
-
-- [npm](https://www.npmjs.com/package/owl.carousel): `npm install --save owl.carousel` or `yarn add owl.carousel jquery`
-- [bower](http://bower.io/search/?q=owl.carousel): `bower install --save owl.carousel`
-
-Or download the [latest release](https://github.com/OwlCarousel2/OwlCarousel2/releases).
-
-### Load
-
-#### Webpack
-
-Add jQuery via the "webpack.ProvidePlugin" to your webpack configuration:
-    
-    const webpack = require('webpack');
-    
-    //...
-    plugins: [
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          'window.jQuery': 'jquery'
-        }),
-    ],
-    //...
-
-Load the required stylesheet and JS:
-
-```js
-import 'owl.carousel/dist/assets/owl.carousel.css';
-import 'owl.carousel';
-```
-
-#### Static HTML
-
-Put the required stylesheet at the [top](https://developer.yahoo.com/performance/rules.html#css_top) of your markup:
-
-```html
-<link rel="stylesheet" href="/node_modules/owl.carousel/dist/assets/owl.carousel.min.css" />
-```
-
-```html
-<link rel="stylesheet" href="/bower_components/owl.carousel/dist/assets/owl.carousel.min.css" />
-```
-
-**NOTE:** If you want to use the default navigation styles, you will also need to include `owl.theme.default.css`.
+* Breaking out the shims into an optional module
+* Using the AOS approach for most functionality
+* Remain completely backwards compatible and a drop-in replacement for GPL wowjs, but issue warning on durations of higher granularity than 50ms
+or longer than 3s
+* Detect Firefox for Android as mobile.
 
 
-Put the script at the [bottom](https://developer.yahoo.com/performance/rules.html#js_bottom) of your markup right after jQuery:
+Reveal CSS animation as you scroll down a page.
+By default, you can use it to trigger [animate.css](https://github.com/daneden/animate.css) animations.
+But you can easily change the settings to your favorite animation library.
 
-```html
-<script src="/node_modules/jquery/dist/jquery.js"></script>
-<script src="/node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
-```
+Advantages:
+- 100% MIT Licensed, not GPL keep your code yours.
+- Naturally Caffeine free
+- Smaller than other JavaScript parallax plugins, like Scrollorama (they do fantastic things, but can be too heavy for simple needs)
+- Super simple to install, and works with animate.css, so if you already use it, that will be very fast to setup
+- Fast execution and lightweight code: the browser will like it ;-)
+- You can change the settings - [see below](#advanced-usage)
 
-```html
-<script src="/bower_components/jquery/dist/jquery.js"></script>
-<script src="/bower_components/owl.carousel/dist/owl.carousel.min.js"></script>
-```
+### [LIVE DEMO ➫](https://graingert.co.uk/WOW/)
 
-### Usage
+## Live examples
+- [MaterialUp](http://www.materialup.com)
+- [Fliplingo](https://www.fliplingo.com)
+- [Streamline Icons](http://www.streamlineicons.com)
+- [Microsoft Stories](http://www.microsoft.com/en-us/news/stories/garage/)
 
-Wrap your items (`div`, `a`, `img`, `span`, `li` etc.) with a container element (`div`, `ul` etc.). Only the class `owl-carousel` is mandatory to apply proper styles:
-
-```html
-<div class="owl-carousel owl-theme">
-  <div> Your Content </div>
-  <div> Your Content </div>
-  <div> Your Content </div>
-  <div> Your Content </div>
-  <div> Your Content </div>
-  <div> Your Content </div>
-  <div> Your Content </div>
-</div>
-```
-**NOTE:** The `owl-theme` class is optional, but without it, you will need to style navigation features on your own.
-
-
-Call the [plugin](https://learn.jquery.com/plugins/) function and your carousel is ready.
-
-```javascript
-$(document).ready(function(){
-  $('.owl-carousel').owlCarousel();
-});
-```
 
 ## Documentation
 
-The documentation, included in this repo in the root directory, is built with [Assemble](http://assemble.io/) and publicly available at https://owlcarousel2.github.io/OwlCarousel2/. The documentation may also be run locally.
+It just take seconds to install and use WOW.js!
+[Read the documentation ➫](https://graingert.co.uk/WOW/docs.html)
 
-## Building
+### Dependencies
+- [animate.css](https://github.com/daneden/animate.css)
 
-This package comes with [Grunt](http://gruntjs.com/) and [Bower](http://bower.io/). The following tasks are available:
+### Installation
 
-  * `default` compiles the CSS and JS into `/dist` and builds the doc.
-  * `dist` compiles the CSS and JS into `/dist` only.
-  * `watch` watches source files and builds them automatically whenever you save.
-  * `test` runs [JSHint](http://www.jshint.com/) and [QUnit](http://qunitjs.com/) tests headlessly in [PhantomJS](http://phantomjs.org/).
+- Bower
 
-To define which plugins are build into the distribution just edit `/_config.json` to fit your needs.
+```bash
+   bower install wow-mit
+```
 
-## Contributing
+- NPM
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md).
+```bash
+   npm install wow.js
+```
 
-## Roadmap
+### Basic usage
 
-Please make sure to check out our [Roadmap Discussion](https://github.com/OwlCarousel2/OwlCarousel2/issues/1756).
+- HTML
+
+```html
+  <section class="wow slideInLeft"></section>
+  <section class="wow slideInRight"></section>
+```
+
+- JavaScript
+
+```javascript
+new WOW().init();
+```
+
+### Advanced usage
+
+- HTML
+
+```html
+  <section class="wow slideInLeft" data-wow-duration="2s" data-wow-delay="5s"></section>
+  <section class="wow slideInRight" data-wow-offset="10"  data-wow-iteration="10"></section>
+```
+
+- JavaScript
+
+```javascript
+var wow = new WOW(
+  {
+    boxClass:     'wow',      // animated element css class (default is wow)
+    animateClass: 'animated', // animation css class (default is animated)
+    offset:       0,          // distance to the element when triggering the animation (default is 0)
+    mobile:       true,       // trigger animations on mobile devices (default is true)
+    live:         true,       // act on asynchronously loaded content (default is true)
+    callback:     function(box) {
+      // the callback is fired every time an animation is started
+      // the argument that is passed in is the DOM node being animated
+    },
+    scrollContainer: null,    // optional scroll container selector, otherwise use window,
+    resetAnimation: true,     // reset animation on end (default is true)
+  }
+);
+wow.init();
+```
+
+### Asynchronous content support
+
+In IE 10+, Chrome 18+ and Firefox 14+, animations will be automatically
+triggered for any DOM nodes you add after calling `wow.init()`. If you do not
+like that, you can disable this by setting `live` to `false`.
+
+If you want to support older browsers (e.g. IE9+), as a fallback, you can call
+the `wow.sync()` method after you have added new DOM elements to animate (but
+`live` should still be set to `true`). Calling `wow.sync()` has no side
+effects.
 
 
-## License
+## Contribute
 
-The code and the documentation are released under the [MIT License](LICENSE).
+The library is transpiled using Babel, please update `wow.js` file.
+
+We use grunt to compile and minify the library:
+
+Install needed libraries
+
+```
+npm install
+```
+
+Get the compilation running in the background
+
+```
+grunt watch
+```
+
+Enjoy!
+
+## Bug tracker
+
+If you find a bug, please report it [here on Github](https://github.com/graingert/WOW/issues)!
+
+## Developer
+
+Originally Developed by Matthieu Aussaguel, [mynameismatthieu.com](http://mynameismatthieu.com)
+Forked to remain under the MIT license by Thomas Grainger, https://graingert.co.uk
+
++ [Github Profile](//github.com/graingert)
+
+## Contributors
+
+Thanks to everyone who has contributed to the project so far:
+
+- Attila Oláh - [@attilaolah](//twitter.com/attilaolah) - [Github Profile](//github.com/attilaolah)
+- [and many others](//github.com/graingert/WOW/graphs/contributors)
+
+Initiated and designed by [Vincent Le Moign](//www.webalys.com/), [@webalys](//twitter.com/webalys)
