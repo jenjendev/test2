@@ -1,213 +1,320 @@
 /**
- * 
- * Run 'grunt' to generate JS and CSS in folder 'dist' and site in folder '_site'
- * *
- * Run 'grunt watch' to automatically regenerate '_site' when you change files in 'src' or in 'website'
- * 
+ * Owl Carousel
+ *
+ * Bartosz Wojciechowski
+ *
+ * Copyright (c) 2014
+ * Licensed under the MIT license.
  */
-
 module.exports = function(grunt) {
 
-  'use strict';
+	require('load-grunt-tasks')(grunt);
 
-  var jekyllConfig = "isLocal : false \r\n"+
-"permalink: /:title/ \r\n"+
-"exclude: ['.json', '.rvmrc', '.rbenv-version', 'README.md', 'Rakefile', 'changelog.md', 'compiler.jar', 'private', 'magnific-popup.sublime-project', 'magnific-popup.sublime-workspace', '.htaccess'] \r\n"+
-"auto: true \r\n"+
-"mfpversion: <%= pkg.version %> \r\n"+
-"pygments: true \r\n";
+	grunt
+		.initConfig({
+			pkg: grunt.file.readJSON('package.json'),
+			app: grunt.file.readJSON('_config.json'),
+			banner: '/**\n' + ' * Owl Carousel v<%= pkg.version %>\n'
+				+ ' * Copyright 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n'
+				+ ' * Licensed under: <%= pkg.license %>\n' + ' */\n',
 
-  // Project configuration.
-  grunt.initConfig({
-    // Metadata.
-    pkg: grunt.file.readJSON('magnific-popup.jquery.json'),
+			// assemble
+			assemble: {
+				options: {
+					flatten: false,
+					expand: true,
+					production: false,
+					assets: '<%= app.docs.dest %>/assets',
+					postprocess: require('pretty'),
 
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>; */\n',
+					// metadata
+					pkg: '<%= pkg %>',
+					app: '<%= app %>',
+					data: [ '<%= app.docs.src %>/data/*.{json,yml}' ],
 
-    // Task configuration.
-    clean: {
-      files: ['dist']
-    },
-    
-    sass: {                            
-      dist: {                      
-        files: {      
-          'dist/magnific-popup.css': 'src/css/main.scss'
-        }
-      }
-    },
+					// templates
+					partials: '<%= app.docs.templates %>/partials/*.hbs',
+					layoutdir: '<%= app.docs.layouts %>/',
 
-    jshint: {
-      all: [
-        'Gruntfile.js',
-        'src/js/*.js'
-      ],
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
+					// extensions
+					helpers: '<%= app.docs.src %>/helpers/*.js'
+				},
+				index: {
+					options: {
+						layout: 'home.hbs'
+					},
+					files: [ {
+						expand: true,
+						cwd: '<%= app.docs.pages %>/',
+						src: '*.hbs',
+						dest: '<%= app.docs.dest %>/'
+					} ]
+				},
+				demos: {
+					options: {
+						layout: 'demos.hbs'
+					},
+					files: [ {
+						expand: true,
+						cwd: '<%= app.docs.pages %>/demos/',
+						src: '*.hbs',
+						dest: '<%= app.docs.dest %>/demos'
+					} ]
+				},
+				docs: {
+					options: {
+						layout: 'docs.hbs'
+					},
+					files: [ {
+						expand: true,
+						cwd: '<%= app.docs.pages %>/docs/',
+						src: '*.hbs',
+						dest: '<%= app.docs.dest %>/docs'
+					} ]
+				}
+			},
 
-    mfpbuild: {
-      all: {
-        src: [
-          'inline',
-          'ajax',
-          'image',
-          'zoom',
-          'iframe',
-          'gallery',
-          'retina',
-        ],
-        basePath: 'src/js/',
-        dest: 'dist/jquery.magnific-popup.js',
-        banner: '<%= banner %>'
-      }
-    },
-    jekyll: {
-      dev: {
-        options: {
-          src: 'website',
-          dest: '_site',
-          url: 'local',
-          raw: jekyllConfig + "url: local"
-        }
-      },
-      production: {
-        options: {
-          src: 'website',
-          dest: '_production',
-          url: 'production',
-          raw: jekyllConfig + "url: production"
-        }
-        
-      }
-    },
+			// clean
+			clean: {
+				docs: [ '<%= app.docs.dest %>' ],
+				dist: [ 'dist' ]
+			},
 
-    copy: {
-      main: {
-        files: [
-          {expand:true, src: ['dist/**'], dest: 'website/'}
-        ]
-      },
-      dev: {
-        files: [
-          {expand:true, src: ['dist/**'], dest: '_site/'}
-        ]
-      }
-    },
+			// sass
+			sass: {
+				docs: {
+					options: {
+						outputStyle: 'compressed',
+						includePaths: [ '<%= app.docs.src %>/assets/scss/', 'node_modules/foundation-sites/scss' ]
+					},
+					files: {
+						'<%= app.docs.dest %>/assets/css/docs.theme.min.css': '<%= app.docs.src %>/assets/scss/docs.theme.scss'
+					}
+				},
+				dist: {
+					options: {
+						outputStyle: 'nested'
+					},
+					files: {
+						'dist/assets/<%= pkg.name %>.css': 'src/scss/<%= pkg.name %>.scss',
+						'dist/assets/owl.theme.default.css': 'src/scss/owl.theme.default.scss',
+						'dist/assets/owl.theme.green.css': 'src/scss/owl.theme.green.scss'
+					}
+				}
+			},
 
-    uglify: {
-      my_target: {
-        files: {
-          'dist/jquery.magnific-popup.min.js': ['dist/jquery.magnific-popup.js']
-        },
-        preserveComments: 'some'
-      },
-      options: {
-        preserveComments: 'some'
-      }
-    },
+			autoprefixer: {
+				options: {
+					browsers: [ 'last 2 versions', 'ie 7', 'ie 8', 'ie 9', 'ie 10', 'ie 11' ]
+				},
+				dist: {
+					files: {
+						'dist/assets/<%= pkg.name %>.css': 'dist/assets/<%= pkg.name %>.css',
+						'dist/assets/owl.theme.default.css': 'dist/assets/owl.theme.default.css',
+						'dist/assets/owl.theme.green.css': 'dist/assets/owl.theme.green.css'
+					}
+				}
+			},
 
-    watch: { // for development run 'grunt watch'
-      jekyll: {
-        files: ['website/**'],
-        tasks: ['jekyll:dev', 'copy:dev']
-      },
-      files: ['src/**'],
-      tasks: [ 'sass', 'mfpbuild', 'copy:dev', 'uglify']
-    },
+			concat: {
+				dist: {
+					files: {
+						'dist/<%= pkg.name %>.js': '<%= app.src.scripts %>'
+					}
+				}
+			},
 
-    cssmin: {
-      compress: {
-        files: {
-          "website/site-assets/all.min.css": ["website/site-assets/site.css", "website/dist/magnific-popup.css"]
-        }
-      }
-    }
+			cssmin: {
+				dist: {
+					files: {
+						'dist/assets/<%= pkg.name %>.min.css': 'dist/assets/<%= pkg.name %>.css',
+						'dist/assets/owl.theme.default.min.css': 'dist/assets/owl.theme.default.css',
+						'dist/assets/owl.theme.green.min.css': 'dist/assets/owl.theme.green.css'
+					}
+				}
+			},
 
-  });
+			jshint: {
+				options: {
+					jshintrc: 'src/js/.jshintrc'
+				},
+				dist: {
+					src: [ '<%= app.src.scripts %>', 'Gruntfile.js' ]
+				}
+			},
 
+			qunit: {
+				options: {
+					timeout: 10000
+				},
+				dist: [ 'test/index.html' ]
+			},
 
-  // Makes Magnific Popup JS file.
-  // grunt mfpbuild --mfp-exclude=ajax,image
-  grunt.task.registerMultiTask('mfpbuild', 'Makes Magnific Popup JS file.', function() {
+			jscs: {
+				options: {
+					config: 'src/js/.jscsrc',
+					reporter: 'text.js',
+					reporterOutput: 'jscs.report.txt'
+				},
+				dist: {
+					src: [ '<%= app.src.scripts %>', 'Gruntfile.js' ]
+				}
+			},
 
-    var files = this.data.src,
-        includes = grunt.option('mfp-exclude'),
-        basePath = this.data.basePath,
-        newContents = this.data.banner + ";(function (factory) { \n" +
-            "if (typeof define === 'function' && define.amd) { \n" +
-            " // AMD. Register as an anonymous module. \n" + 
-            " define(['jquery'], factory); \n" + 
-            " } else if (typeof exports === 'object') { \n" +
-            " // Node/CommonJS \n" +
-            " factory(require('jquery')); \n" +
-            " } else { \n" +
-            " // Browser globals \n" +
-            " factory(window.jQuery || window.Zepto); \n" +
-            " } \n" +
-            " }(function($) { \n";
+			usebanner: {
+				dist: {
+					options: {
+						banner: '<%= banner %>',
+						linebreak: false
+					},
+					files: {
+						src: [
+							'dist/<%= pkg.name %>.js',
+							'dist/assets/*.css'
+						]
+					}
+				}
+			},
 
-    if(includes) {
-      includes = includes.split(/[\s,]+/); // 'a,b,c' => ['a','b','c']
-      var removeA = function (arr) {
-          var what, a = arguments, L = a.length, ax;
-          while (L > 1 && arr.length) {
-              what = a[--L];
-              while ((ax= arr.indexOf(what)) !== -1) {
-                  arr.splice(ax, 1);
-              }
-          }
-          return arr;
-      };
+			uglify: {
+				options: {
+					banner: '<%= banner %>'
+				},
+				dist: {
+					files: {
+						'dist/<%= pkg.name %>.min.js': 'dist/<%= pkg.name %>.js'
+					}
+				}
+			},
 
-      includes.forEach(function( name ) {
-        if(name) {
-           
-           grunt.log.writeln( 'removed "'+name +'"' );
-           files = removeA(files, name);
-         }
-      });
-    }
-    
-    files.unshift('core');
+			// copy
+			copy: {
+				distImages: {
+					expand: true,
+					flatten: true,
+					cwd: 'src/',
+					src: [ 'img/*.*' ],
+					dest: 'dist/assets'
+				},
 
-    grunt.log.writeln( 'Your build is made of:'+files );
+				distToDocs: {
+					expand: true,
+					cwd: 'dist/',
+					src: [ '**/*.*' ],
+					dest: '<%= app.docs.dest %>/assets/owlcarousel'
+				},
 
-    files.forEach(function( name ) {
-      // Wrap each module with a pience of code to be able to exlude it, stolen for modernizr.com
-      newContents += "\n/*>>"+name+"*/\n"; 
-      newContents += grunt.file.read( basePath + name + '.js' ) + '\n';
-      newContents += "\n/*>>"+name+"*/\n"; 
-    });
-    newContents+= " _checkInstance(); }));";
+				srcToDocs: {
+					expand: true,
+					cwd: 'src/js',
+					src: [ '**/*.js' ],
+					dest: '<%= app.docs.dest %>/assets/owlcarousel/src'
+				},
 
-    grunt.file.write( this.data.dest, newContents );
-  });
+				docsAssets: {
+					expand: true,
+					cwd: '<%= app.docs.src %>/assets/',
+					src: [ 'css/*.css', 'vendors/*.js', 'vendors/*.map', 'img/*.*', 'js/*.*' ],
+					dest: '<%= app.docs.dest %>/assets/'
+				},
 
+				readme: {
+					files: [ {
+						'dist/LICENSE': 'LICENSE',
+						'dist/README.md': 'README.md'
+					} ]
+				}
+			},
 
+			// connect
+			connect: {
+				options: {
+					port: 9600,
+					open: true,
+					livereload: true,
+					hostname: 'localhost'
+				},
+				docs: {
+					options: {
+						base: "<%= app.docs.dest %>"
+					}
+				}
+			},
 
+			// watch
+			watch: {
+				options: {
+					livereload: true
+				},
+				templatesDocs: {
+					files: [ '<%= app.docs.templates %>/**/*.hbs' ],
+					tasks: [ 'assemble' ]
+				},
+				sassDocs: {
+					files: [ '<%= app.docs.src %>/assets/**/*.scss' ],
+					tasks: [ 'sass:docs' ]
+				},
+				sass: {
+					files: [ 'src/**/*.scss' ],
+					tasks: [ 'sass:dist', 'cssmin:dist', 'usebanner:dist', 'copy:distToDocs' ]
+				},
+				jsDocs: {
+					files: [ '<%= app.docs.src %>/assets/**/*.js' ],
+					tasks: [ 'copy:docsAssets' ]
+				},
+				js: {
+					files: [ 'src/**/*.js' ],
+					tasks: [ 'jscs:dist', 'jshint:dist', 'qunit:dist', 'concat:dist', 'uglify:dist', 'usebanner:dist', 'copy:distToDocs', 'copy:srcToDocs' ]
+				},
+				helpersDocs: {
+					files: [ '<%= app.docs.src %>/helpers/*.js' ],
+					tasks: [ 'assemble' ]
+				},
+				test: {
+					files: [ 'test/*.html', 'test/unit/*.js' ],
+					tasks: [ 'qunit:dist' ]
+				}
+			},
 
+			// compress zip
+			compress: {
+				zip: {
+					options: {
+						archive: 'docs/download/owl.carousel.<%= pkg.version %>.zip'
+					},
+					files: [ {
+						expand: true,
+						cwd: 'dist/',
+						src: [ '**' ],
+						dest: 'owl.carousel.<%= pkg.version %>'
+					} ]
+				}
+			},
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-sass');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-jekyll');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
+			// publish to github pages
+			'gh-pages': {
+				options: {
+					base: 'docs'
+				},
+				src: '**/*'
+			}
+		});
 
-  // Default task.
-  grunt.registerTask('default', ['sass', 'mfpbuild', 'uglify', 'copy', 'jekyll:dev']);
+	grunt.loadNpmTasks('assemble');
 
-  grunt.registerTask('production', ['sass', 'mfpbuild', 'uglify', 'copy', 'cssmin', 'jekyll:production']);
-  grunt.registerTask('nosite', ['sass', 'mfpbuild', 'uglify']);
-  grunt.registerTask('hint', ['jshint']);
+	// tasks
+	grunt.registerTask('dist', [ 'clean:dist', 'sass:dist', 'autoprefixer', 'concat:dist', 'cssmin:dist', 'copy:distImages', 'usebanner:dist', 'uglify:dist', 'copy:readme' ]);
+
+	grunt.registerTask('docs', [ 'dist', 'clean:docs', 'assemble', 'sass:docs', 'copy:docsAssets', 'copy:distToDocs', 'zip' ]);
+
+	grunt.registerTask('test', [ 'jshint:dist', 'qunit:dist', 'jscs:dist' ]);
+
+	grunt.registerTask('default', [ 'dist', 'docs', 'test' ]);
+
+	grunt.registerTask('serve', [ 'connect:docs', 'watch' ]);
+
+	grunt.registerTask('zip', [ 'compress' ]);
+
+	grunt.registerTask('deploy', [ 'docs', 'gh-pages' ]);
 
 };

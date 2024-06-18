@@ -1,76 +1,122 @@
-# Magnific Popup Repository
+# Owl Carousel 2
 
-[![Build Status](https://travis-ci.org/dimsemenov/Magnific-Popup.png)](https://travis-ci.org/dimsemenov/Magnific-Popup) 
-[![Flattr](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/thing/1310305/Magnific-Popup-by-dimsemenov)
+Touch enabled [jQuery](https://jquery.com/) plugin that lets you create a beautiful, responsive carousel slider. **To get started, check out https://owlcarousel2.github.io/OwlCarousel2/.**
 
-Fast, light and responsive lightbox plugin, for jQuery and Zepto.js.
+**Notice:** The old Owl Carousel site (owlgraphic [dot] com) is no longer in use. Please delete all references to this in bookmarks and your own products' documentation as it's being used for malicious purposes.
 
-- [Documentation and getting started guide](http://dimsemenov.com/plugins/magnific-popup/documentation.html).
-- [Examples and plugin home page](http://dimsemenov.com/plugins/magnific-popup/).
-- More examples in [CodePen collection](http://codepen.io/collection/nLcqo).
+## Quick start
 
-Optionally, install via Bower `bower install magnific-popup` or npm: `npm install magnific-popup`.
-[Ruby gem](https://rubygems.org/gems/magnific-popup-rails): `gem install magnific-popup-rails`.
+### Install
 
-## Extensions
+This package can be installed with:
 
-- WordPress plugin - [under development](http://dimsemenov.com/plugins/magnific-popup/wordpress.html).
-- [Drupal module](https://drupal.org/project/magnific_popup).
-- [Concrete5 add-on](https://github.com/cdowdy/concrete5-Magnific-Popup).
-- [Redaxo add-on](http://www.redaxo.org/de/download/addons/?addon_id=1131).
-- [Contao extension](https://github.com/fritzmg/contao-magnific-popup).
+- [npm](https://www.npmjs.com/package/owl.carousel): `npm install --save owl.carousel` or `yarn add owl.carousel jquery`
+- [bower](http://bower.io/search/?q=owl.carousel): `bower install --save owl.carousel`
 
-If you created an extension for some CMS, email me and I'll add it to this list.
+Or download the [latest release](https://github.com/OwlCarousel2/OwlCarousel2/releases).
 
-## Location of stuff
+### Load
 
-- Generated popup JS and CSS files are in folder [dist/](https://github.com/dimsemenov/Magnific-Popup/tree/master/dist). (Online build tool is on [documentation page](http://dimsemenov.com/plugins/magnific-popup/documentation.html)).
-- Source files are in folder [src/](https://github.com/dimsemenov/Magnific-Popup/tree/master/src). They include [Sass CSS file](https://github.com/dimsemenov/Magnific-Popup/blob/master/src/css/main.scss) and js parts (edit them if you wish to submit commit). 
-- Website (examples & documentation) is in folder [website/](https://github.com/dimsemenov/Magnific-Popup/tree/master/website).
-- Documentation page itself is in [website/documentation.md](https://github.com/dimsemenov/Magnific-Popup/blob/master/website/documentation.md) (contributions to it are very welcome).
+#### Webpack
 
+Add jQuery via the "webpack.ProvidePlugin" to your webpack configuration:
+    
+    const webpack = require('webpack');
+    
+    //...
+    plugins: [
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
+          'window.jQuery': 'jquery'
+        }),
+    ],
+    //...
 
+Load the required stylesheet and JS:
 
-## Using Magnific Popup?
+```js
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel';
+```
 
-If you used Magnific Popup in some interesting way, or on site of popular brand, I'd be very grateful if you <a href='mailto:diiiimaaaa@gmail.com?subject="Site that uses Magnific Popup"'>email me</a> a link to it.
+#### Static HTML
 
+Put the required stylesheet at the [top](https://developer.yahoo.com/performance/rules.html#css_top) of your markup:
 
-## Build 
+```html
+<link rel="stylesheet" href="/node_modules/owl.carousel/dist/assets/owl.carousel.min.css" />
+```
 
-To compile Magnific Popup by yourself, first of make sure that you have [Node.js](http://nodejs.org/), [Grunt.js](https://github.com/cowboy/grunt), [Ruby](http://www.ruby-lang.org/) and [Jekyll](https://github.com/mojombo/jekyll/) installed, then:
+```html
+<link rel="stylesheet" href="/bower_components/owl.carousel/dist/assets/owl.carousel.min.css" />
+```
 
-1) Copy repository
-
-	git clone https://github.com/dimsemenov/Magnific-Popup.git
-
-2) Go inside Magnific Popup folder that you fetched and install Node dependencies
-
-	cd Magnific-Popup && npm install
-
-3) Now simply run `grunt` to generate JS and CSS in folder `dist` and site in folder `_site/`.
-
-	grunt
-
-Optionally:
-
-- Run `grunt watch` to automatically rebuild script when you change files in `src/` or in `website/`.
-- If you don't have and don't want to install Jekyll, run `grunt nosite` to just build JS and CSS files related to popup in `dist/`.
+**NOTE:** If you want to use the default navigation styles, you will also need to include `owl.theme.default.css`.
 
 
+Put the script at the [bottom](https://developer.yahoo.com/performance/rules.html#js_bottom) of your markup right after jQuery:
 
-## [Changelog](https://github.com/dimsemenov/Magnific-Popup/releases)
+```html
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script src="/node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
+```
+
+```html
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/owl.carousel/dist/owl.carousel.min.js"></script>
+```
+
+### Usage
+
+Wrap your items (`div`, `a`, `img`, `span`, `li` etc.) with a container element (`div`, `ul` etc.). Only the class `owl-carousel` is mandatory to apply proper styles:
+
+```html
+<div class="owl-carousel owl-theme">
+  <div> Your Content </div>
+  <div> Your Content </div>
+  <div> Your Content </div>
+  <div> Your Content </div>
+  <div> Your Content </div>
+  <div> Your Content </div>
+  <div> Your Content </div>
+</div>
+```
+**NOTE:** The `owl-theme` class is optional, but without it, you will need to style navigation features on your own.
+
+
+Call the [plugin](https://learn.jquery.com/plugins/) function and your carousel is ready.
+
+```javascript
+$(document).ready(function(){
+  $('.owl-carousel').owlCarousel();
+});
+```
+
+## Documentation
+
+The documentation, included in this repo in the root directory, is built with [Assemble](http://assemble.io/) and publicly available at https://owlcarousel2.github.io/OwlCarousel2/. The documentation may also be run locally.
+
+## Building
+
+This package comes with [Grunt](http://gruntjs.com/) and [Bower](http://bower.io/). The following tasks are available:
+
+  * `default` compiles the CSS and JS into `/dist` and builds the doc.
+  * `dist` compiles the CSS and JS into `/dist` only.
+  * `watch` watches source files and builds them automatically whenever you save.
+  * `test` runs [JSHint](http://www.jshint.com/) and [QUnit](http://qunitjs.com/) tests headlessly in [PhantomJS](http://phantomjs.org/).
+
+To define which plugins are build into the distribution just edit `/_config.json` to fit your needs.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Roadmap
+
+Please make sure to check out our [Roadmap Discussion](https://github.com/OwlCarousel2/OwlCarousel2/issues/1756).
+
 
 ## License
 
-Script is MIT licensed and free and will always be kept this way. But has a small restriction from me - please do not create public WordPress plugin based on it(or at least contact me before creating it), because I will make it and it'll be open source too ([want to get notified?](http://dimsemenov.com/subscribe.html)).
-
-Created by [@dimsemenov](http://twitter.com/dimsemenov) & [contributors](https://github.com/dimsemenov/Magnific-Popup/contributors).
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/dimsemenov/magnific-popup/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
-## Bugs & contributing
-
-Please report bugs via GitHub and ask general questions through [Stack Overflow](http://stackoverflow.com/questions/tagged/magnific-popup). Feel free to submit commit [pull-request](https://github.com/dimsemenov/Magnific-Popup/pulls), even the tiniest contributions to the script or to the documentation are very welcome.
-
-
+The code and the documentation are released under the [MIT License](LICENSE).

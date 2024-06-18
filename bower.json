@@ -1,16 +1,13 @@
 {
-  "name": "magnific-popup",
+  "name": "owl.carousel",
+  "version": "2.3.4",
   "main": [
-    "dist/jquery.magnific-popup.js",
-    "dist/magnific-popup.css"
+    "dist/owl.carousel.js",
+    "dist/assets/owl.carousel.css",
+    "dist/assets/owl.theme.default.css"
   ],
+  "ignore": [],
   "dependencies": {
-    "jquery": ">=1.8.0"
-  },
-  "ignore": [
-    "node_modules/",
-    "components/",
-    "website/",
-    "libs/"
-  ]
+    "jquery": ">= 1.8.3"
+  }
 }

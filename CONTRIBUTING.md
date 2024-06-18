@@ -1,31 +1,88 @@
-# Contributing to Animate.css
+## Contributing
 
-Thanks for your interest in contributing to Animate.css! Before contributing, please make sure you understand the guidelines provided here. Animate.css is widely used, so it’s important to maintain a high level of quality and to contribute with the interests of the community in mind.
+The [issue tracker](https://github.com/OwlCarousel2/OwlCarousel2/issues) is the preferred channel for bug reports, feature requests, and submitting pull requests.
 
-## Design Guidelines
+**Please do not use the issue tracker for personal support requests. Stack Overflow ([`owl-carousel`](https://stackoverflow.com/questions/tagged/owl-carousel)) is a better place to get help.**
 
-Animations, like many facets of visual and interaction design, can be highly subjective. Maintaining a consistent library of animations in an active community can be difficult; these design guidelines are designed to help encourage thoughtful criticism of new animations that are proposed for Animate.css.
+### Bug reports
 
-The animations in Animate.css should follow a few key principles:
+A bug is a **demonstrable, reproducible problem** that is caused by the code in the repository. Good bug reports are extremely helpful, so thanks!
 
-- **Animations should be subtle.** Avoid creating animations that involve large translations, or span a natural duration of longer than 1 second.
-- **Animations should be tolerable.** Related to subtlety, animations should be tolerable—seeing them repeatedly should not become too annoying or overbearing.
-- **Animations should not interfere with document flow or control/input availability.** In other words, the absence of an animation should never reduce usability of a product: they should be non-critical and seen as “progressive enhancements”. Avoid animations that change properties such as `position` or `display`.
-- **Animations should be helpful.** They should be designed to guide users to a point of interest, ease natural reading order, or to communicate relationships between elements.
-- **Animations should feel familial.** Avoid introducing animations that feel out-of-place compared to the existing set.
-- **Animations should feel natural.** Animations should reflect, as much as is reasonable, motion that occurs in natural physics. Avoid extreme timing functions, and model animations on real-world events.
+Guidelines for bug reports:
 
-## Code Styling
+  1. Use the GitHub issue search — check if the issue has already been reported.
 
-1. Match the naming convention (camelCase, categorized [fades, bounces, etc])
-2. Indent with two spaces
-3. End each file with a blank line
-4. Make sure you have an editorconfig plugin/extension enabled in your editor and all the dependencies installed so editorconfig and prettier can automatically format your code when committing.
+  2. Check if the issue has been fixed — try to reproduce it using the latest `develop` branch in the repository.
 
-## How To Contribute
+  3. Isolate the problem - you NEED to provide a live example — ideally also create a reduced test case. This [CodePen](https://codepen.io/anon/pen/prvbMp), [JSFiddle](https://jsfiddle.net/h8x8bvn9/2/) and [JS Bin](https://jsbin.com/bojonaceve/2/edit?html,js,output) are helpful templates you can fork or clone.
+  
+Example:
 
-1. [Fork](https://help.github.com/articles/fork-a-repo/) the project
-2. Create a new topic branch on your local forked copy
-3. Push your topic branch up to your fork
-4. Create a [pen](https://codepen.io/) demonstrating what yor change will do.
-5. [Open a Pull Request](https://help.github.com/articles/about-pull-requests/) with a clear title and description against the `main` branch.
+> Short and descriptive example bug report title
+>
+> A summary of the issue and the browser/OS environment in which it occurs. If suitable, include the steps required to reproduce the bug.
+>
+>   1. This is the first step
+>   2. This is the second step
+>   3. Further steps, etc.
+>
+> `<url>` - a link to the reduced test case
+>
+> Any other information you want to share that is relevant to the issue being reported. This might include the lines of code that you have identified as causing the bug, and potential solutions (and your opinions on their merits).
+
+### Feature requests
+
+Feature requests are welcome, but please take a moment to find out whether your idea fits with the scope and aims of the project. It's up to you to make a strong case to convince the project's developers of the merits of this feature.
+
+To get approval for your feature request, please create an issue on the issue tracker with as much detail and context as possible. We'll take a look at it and then [hopefully] apply the "[approved for development](https://github.com/OwlCarousel2/OwlCarousel2/labels/approved%20for%20development)" tag so someone can get to work on it!
+
+### Pull requests
+
+Good pull requests are a fantastic help. They should remain focused in scope and avoid containing unrelated commits.
+
+Adhering to the following process is the best way to get your work included in the project:
+
+  1. [Fork](https://help.github.com/fork-a-repo/) the project, clone your fork, and configure the remotes:
+
+    ```bash
+    git clone https://github.com/<your-username>/OwlCarousel2.git
+    cd OwlCarousel2
+    git remote add upstream https://github.com/OwlCarousel2/OwlCarousel2.git
+    ```
+
+  2. If you cloned a while ago, get the latest changes from upstream:
+
+    ```bash
+    git checkout develop
+    git pull [--rebase] upstream develop
+    ```
+
+  3. Create a new topic branch (off the main project `develop` branch) to contain your feature, change, or fix:
+
+    ```bash
+    git checkout -b <topic-branch-name>
+    ```
+
+  4. Build the distribution before committing to ensure your changes follow the coding standards and all build files are up to date.
+
+    ```bash
+    grunt dist
+    ```
+
+  5. Commit your changes in logical chunks. Please adhere to these [guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html). Use Git's [interactive rebase](https://help.github.com/articles/interactive-rebase) feature to tidy up your commits before making them public.
+
+  6. Locally merge (or rebase) the upstream development branch into your topic branch:
+
+    ```bash
+    git pull [--rebase] upstream develop
+    ```
+
+  7. Push your topic branch up to your fork:
+
+    ```bash
+    git push origin <topic-branch-name>
+    ```
+
+  8. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title and description against the `develop` branch.
+
+**By submitting a patch, you agree to allow the project owner to license your work under the terms of the [MIT License](LICENSE).**
